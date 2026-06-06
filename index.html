@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -636,11 +636,86 @@ text-shadow:
 0 0 12px rgba(255,255,255,.6);
 
 }
+ .particles{
+position;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events;
+overflow;
+z-index:1;
+}
+
+.particles::before,
+.particles::after{
+content:"";
+position;
+width:200%;
+height:200%;
+
+background-image:
+radial-gradient(
+rgba(255,255,255,.7) 1.2px,
+transparent 1.2px
+);
+
+background-size:45px 45px;
+
+opacity:.18;
+}
+
+.particles::before{
+animation 45s linear infinite;
+}
+
+.particles::after{
+animation 60s linear infinite;
+opacity:.10;
+}
+
+@keyframes particleMove1{
+
+from{
+transform(0);
+}
+
+to{
+transform(-500px);
+}
+
+}
+
+@keyframes particleMove2{
+
+from{
+transform(0);
+}
+
+to{
+transform(-300px);
+}
+
+}
+ .logo img{
+width:110px;
+height:auto;
+
+filter:
+drop-shadow(0 0 20px #38bdf8)
+drop-shadow(0 0 40px #22d3ee)
+drop-shadow(0 0 60px #0ea5e9);
+
+animation:floatLogo 4s ease-in-out infinite;
+}
 </style>
 </head>
 
 <body>
 <div class="water-glow"></div> <div class="nature-glow"></div>
+ <div class="particles"></div>
+
+<div class="card">
 <div class="card">
 <div class="header">
 
