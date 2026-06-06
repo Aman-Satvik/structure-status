@@ -306,6 +306,7 @@ function resizeImage(file){
     });
 }
 
+```javascript
 async function saveData(){
 
     const name =
@@ -345,27 +346,42 @@ async function saveData(){
 
     try{
 
-        const response =
-        await fetch(api,{
-
+        const response = await fetch(api,{
             method:"POST",
-
             headers:{
-                "Content-Type":
-                "application/json"
+                "Content-Type":"application/json"
             },
-
             body:JSON.stringify({
-
                 name:name,
                 status:status,
                 image:image
-
             })
         });
 
-        const result =
-        await response.json();
+        const text =
+        await response.text();
+
+        console.log(
+            "SERVER RESPONSE:",
+            text
+        );
+
+        let result;
+
+        try{
+
+            result =
+            JSON.parse(text);
+
+        }catch(parseError){
+
+            document.getElementById("msg").innerHTML =
+            "❌ Server Response Error";
+
+            console.log(text);
+
+            return;
+        }
 
         if(result.success){
 
@@ -374,6 +390,7 @@ async function saveData(){
 
             document.getElementById("photo").value = "";
             document.getElementById("village").value = "";
+            document.getElementById("name").value = "";
 
             loadNames();
 
@@ -391,6 +408,7 @@ async function saveData(){
         "❌ Error while saving";
     }
 }
+```
 
 loadNames();
 toggleCamera();
