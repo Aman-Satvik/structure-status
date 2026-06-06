@@ -349,23 +349,14 @@ document.getElementById("msg").innerHTML =
 
 try{
 
-const response =
-await fetch(api,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-name:name,
-status:status,
-image:image
-
-})
-
+const response = await fetch(api,{
+    method:"POST",
+    redirect:"follow",
+    body:JSON.stringify({
+        name:name,
+        status:status,
+        image:image
+    })
 });
 
 const text =
