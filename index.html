@@ -207,8 +207,8 @@ html;
 
 console.error(err);
 
-document.getElementById("name").innerHTML =
-'<option>Error Loading Data</option>';
+document.getElementById("msg").innerHTML =
+"❌ " + err.message;
 
 }
 
@@ -368,8 +368,13 @@ image:image
 
 });
 
+const text =
+await response.text();
+
+console.log("SERVER RESPONSE:", text);
+
 const result =
-await response.json();
+JSON.parse(text);
 
 if(result.success){
 
