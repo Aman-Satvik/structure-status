@@ -422,11 +422,226 @@ font-size:12px;
 }
 
 }
+ ```css
+/* ===== Water Conservation Effects ===== */
+
+.card::before{
+content:"";
+position:absolute;
+inset:0;
+border-radius:32px;
+padding:1px;
+
+background:linear-gradient(
+135deg,
+rgba(255,255,255,.9),
+rgba(255,255,255,.15),
+rgba(255,255,255,.7)
+);
+
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+
+pointer-events:none;
+}
+
+/* Floating Water Glow */
+
+.water-glow{
+position:fixed;
+width:500px;
+height:500px;
+border-radius:50%;
+
+background:#22d3ee;
+
+filter:blur(180px);
+
+opacity:.18;
+
+top:-150px;
+right:-150px;
+
+animation:waterGlow 14s ease-in-out infinite;
+
+pointer-events:none;
+}
+
+@keyframes waterGlow{
+
+0%,100%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(80px);
+}
+
+}
+
+/* Nature Glow */
+
+.nature-glow{
+position:fixed;
+width:550px;
+height:550px;
+border-radius:50%;
+
+background:#22c55e;
+
+filter:blur(220px);
+
+opacity:.15;
+
+bottom:-250px;
+left:-150px;
+
+animation:natureGlow 16s ease-in-out infinite;
+
+pointer-events:none;
+}
+
+@keyframes natureGlow{
+
+0%,100%{
+transform:translateX(0);
+}
+
+50%{
+transform:translateX(120px);
+}
+
+}
+
+/* Floating Bubbles */
+
+.bubble{
+position:fixed;
+
+bottom:-100px;
+
+background:rgba(255,255,255,.18);
+
+border-radius:50%;
+
+backdrop-filter:blur(5px);
+
+pointer-events:none;
+
+animation:rise linear infinite;
+}
+
+@keyframes rise{
+
+0%{
+transform:translateY(0);
+opacity:0;
+}
+
+20%{
+opacity:.6;
+}
+
+100%{
+transform:translateY(-120vh);
+opacity:0;
+}
+
+}
+
+/* Water Button */
+
+button{
+
+background:linear-gradient(
+135deg,
+#00b4d8,
+#0077b6,
+#0096c7
+) !important;
+
+box-shadow:
+0 15px 30px rgba(0,180,216,.45) !important;
+
+}
+
+button:hover{
+
+box-shadow:
+0 20px 40px rgba(0,180,216,.65) !important;
+
+}
+
+/* Village Input Highlight */
+
+#village{
+
+background:
+linear-gradient(
+135deg,
+#dbeafe,
+#ffffff
+) !important;
+
+font-weight:600;
+
+}
+
+/* Dropdown Premium */
+
+select{
+
+cursor:pointer;
+
+background:
+linear-gradient(
+135deg,
+#ffffff,
+#f8fafc
+) !important;
+
+}
+
+/* Logo Glow */
+
+.logo img{
+
+filter:
+drop-shadow(0 0 20px rgba(255,255,255,.5))
+drop-shadow(0 0 40px rgba(56,189,248,.4));
+
+}
+
+/* Upload Box */
+
+#imageDiv{
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.15),
+rgba(255,255,255,.05)
+);
+
+}
+
+/* Success Message Glow */
+
+#msg{
+
+text-shadow:
+0 0 12px rgba(255,255,255,.6);
+
+}
 </style>
 </head>
 
 <body>
-
+<div class="water-glow"></div> <div class="nature-glow"></div>
 <div class="card">
 <div class="header">
 
@@ -688,7 +903,35 @@ console.log(err);
 
 loadWorks();
 toggleImage();
+```javascript
+for(let i=0;i<25;i++){
 
+const bubble =
+document.createElement("div");
+
+bubble.className = "bubble";
+
+const size =
+10 + Math.random()*35;
+
+bubble.style.width =
+size + "px";
+
+bubble.style.height =
+size + "px";
+
+bubble.style.left =
+Math.random()*100 + "vw";
+
+bubble.style.animationDuration =
+(8 + Math.random()*12) + "s";
+
+bubble.style.animationDelay =
+Math.random()*8 + "s";
+
+document.body.appendChild(bubble);
+
+}
 </script>
 
 </body>
