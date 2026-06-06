@@ -1,27 +1,23 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Structure Status Entry</title>
+<title>Structure Status</title>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
-
 body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#1e3a8a,#3b82f6);
 min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 padding:20px;
-background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb,#38bdf8);
 }
 
 .card{
@@ -29,126 +25,80 @@ width:100%;
 max-width:450px;
 background:rgba(255,255,255,.15);
 backdrop-filter:blur(15px);
-border-radius:20px;
 padding:30px;
-box-shadow:0 15px 35px rgba(0,0,0,.3);
+border-radius:20px;
 color:#fff;
+box-shadow:0 10px 30px rgba(0,0,0,.3);
 }
 
-.logo{
+h1{
 text-align:center;
-margin-bottom:25px;
-}
-
-.logo h1{
-font-size:30px;
-margin-bottom:8px;
-}
-
-.logo p{
-opacity:.85;
+margin-top:0;
 }
 
 label{
 display:block;
-margin-top:18px;
+margin-top:15px;
 margin-bottom:8px;
-font-weight:600;
+font-weight:bold;
 }
 
-select,
-input[type=text]{
+select,input{
 width:100%;
-padding:14px;
+padding:12px;
 border:none;
-border-radius:12px;
-font-size:16px;
-outline:none;
-}
-
-input[type=file]{
-width:100%;
-padding:10px;
-border:none;
-border-radius:12px;
-background:#fff;
-color:#000;
+border-radius:10px;
+box-sizing:border-box;
 }
 
 button{
 width:100%;
-margin-top:25px;
-padding:15px;
+padding:14px;
+margin-top:20px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#22c55e;
-color:#fff;
+color:white;
 font-size:18px;
-font-weight:700;
+font-weight:bold;
 cursor:pointer;
-}
-
-button:hover{
-background:#16a34a;
 }
 
 #msg{
 margin-top:15px;
 text-align:center;
-font-weight:600;
-}
-
-.footer{
-text-align:center;
-margin-top:20px;
-font-size:12px;
-opacity:.8;
-line-height:1.5;
+font-weight:bold;
 }
 
 </style>
 </head>
+
 <body>
 
 <div class="card">
 
-<div class="logo">
 <h1>🏗 Structure Status</h1>
-<p>Select Structure & Update Status</p>
-</div>
 
 <label>Select Work</label>
 
-<select id="name" onchange="showVillage()">
-<option value="">Loading...</option>
+<select id="work" onchange="showVillage()">
+<option>Loading...</option>
 </select>
 
 <label>Village Name</label>
 
-<input
-type="text"
-id="village"
-readonly>
+<input type="text" id="village" readonly>
 
 <label>Status</label>
 
-<select id="status" onchange="toggleCamera()">
-
-<option value="To be deleted">
-🗑 To be deleted
-</option>
-
-<option value="To be constructed">
-🚧 To be constructed
-</option>
-
+<select id="status" onchange="toggleImage()">
+<option value="To be deleted">🗑 To be deleted</option>
+<option value="To be constructed">🚧 To be constructed</option>
 </select>
 
-<div id="cameraDiv" style="display:none;">
+<div id="imageDiv" style="display:none;">
 
-<label>
-Upload Consent Form *
-</label>
+<label>Upload Consent Form *</label>
 
 <input
 type="file"
@@ -164,11 +114,6 @@ Submit Entry
 
 <div id="msg"></div>
 
-<div class="footer">
-PMKSY 2.0 Monitoring Portal<br>
-By Er. Amandeep Godara (AEn, WDSC, Rawatsar)
-</div>
-
 </div>
 
 <script>
@@ -176,39 +121,39 @@ By Er. Amandeep Godara (AEn, WDSC, Rawatsar)
 const api =
 "https://script.google.com/macros/s/AKfycby78exG99GS9atmmB9X-Un0NX5eZ8DnIaR1uYUo2HU-1rlrA4AEiMgI7O7h1NnSnpxl/exec";
 
-let workData = [];
+let works = [];
 
-async function loadNames(){
+async function loadWorks(){
 
 try{
 
 const res =
-await fetch(api + "?action=details");
+await fetch(api + "?action=list");
 
-workData =
+works =
 await res.json();
 
 let html =
 '<option value="">Select Work</option>';
 
-workData.forEach(item=>{
+works.forEach(w=>{
 
-html += `
-<option value="${item.name}">
-${item.name}
+html +=
+`<option value="${w.name}">
+${w.name}
 </option>`;
 
 });
 
-document.getElementById("name").innerHTML =
+document.getElementById("work").innerHTML =
 html;
 
 }catch(err){
 
-console.error(err);
+document.getElementById("work").innerHTML =
+'<option>Error Loading</option>';
 
-document.getElementById("msg").innerHTML =
-"❌ " + err.message;
+console.log(err);
 
 }
 
@@ -216,23 +161,23 @@ document.getElementById("msg").innerHTML =
 
 function showVillage(){
 
-const selected =
-document.getElementById("name").value;
+const work =
+document.getElementById("work").value;
 
 const row =
-workData.find(x => x.name === selected);
+works.find(x=>x.name===work);
 
 document.getElementById("village").value =
 row ? row.village : "";
 
 }
 
-function toggleCamera(){
+function toggleImage(){
 
 const status =
 document.getElementById("status").value;
 
-document.getElementById("cameraDiv").style.display =
+document.getElementById("imageDiv").style.display =
 status === "To be deleted"
 ? "block"
 : "none";
@@ -241,51 +186,36 @@ status === "To be deleted"
 
 function resizeImage(file){
 
-return new Promise((resolve)=>{
+return new Promise(resolve=>{
 
 const reader =
 new FileReader();
 
-reader.onload = function(e){
+reader.onload = e=>{
 
 const img =
 new Image();
 
-img.onload = function(){
+img.onload = ()=>{
 
 const canvas =
 document.createElement("canvas");
 
-let width =
-img.width;
+let w = img.width;
+let h = img.height;
 
-let height =
-img.height;
+if(w > 1200){
 
-const maxWidth = 1200;
-
-if(width > maxWidth){
-
-height =
-height * (maxWidth / width);
-
-width =
-maxWidth;
+h = h * (1200/w);
+w = 1200;
 
 }
 
-canvas.width = width;
-canvas.height = height;
+canvas.width = w;
+canvas.height = h;
 
-canvas
-.getContext("2d")
-.drawImage(
-img,
-0,
-0,
-width,
-height
-);
+canvas.getContext("2d")
+.drawImage(img,0,0,w,h);
 
 resolve(
 canvas.toDataURL(
@@ -296,8 +226,7 @@ canvas.toDataURL(
 
 };
 
-img.src =
-e.target.result;
+img.src = e.target.result;
 
 };
 
@@ -310,14 +239,15 @@ reader.readAsDataURL(file);
 async function saveData(){
 
 const name =
-document.getElementById("name").value;
+document.getElementById("work").value;
 
 const status =
 document.getElementById("status").value;
 
 if(!name){
 
-alert("Please Select Work");
+alert("Select Work");
+
 return;
 
 }
@@ -345,61 +275,56 @@ await resizeImage(file);
 }
 
 document.getElementById("msg").innerHTML =
-"⏳ Uploading... Please wait";
+"Uploading...";
 
 try{
 
-const response = await fetch(api,{
-    method:"POST",
-    redirect:"follow",
-    body:JSON.stringify({
-        name:name,
-        status:status,
-        image:image
-    })
+const response =
+await fetch(api,{
+
+method:"POST",
+
+body:JSON.stringify({
+name:name,
+status:status,
+image:image
+})
+
 });
 
-const text =
-await response.text();
-
-console.log("SERVER RESPONSE:", text);
-
 const result =
-JSON.parse(text);
+await response.json();
 
 if(result.success){
 
 document.getElementById("msg").innerHTML =
-"✅ Entry Saved Successfully";
+"✅ Saved Successfully";
 
-document.getElementById("photo").value = "";
-document.getElementById("village").value = "";
-document.getElementById("name").value = "";
-
-loadNames();
+loadWorks();
 
 }else{
 
 document.getElementById("msg").innerHTML =
-"❌ " + result.error;
+result.error;
 
 }
 
 }catch(err){
 
-console.error(err);
-
 document.getElementById("msg").innerHTML =
-"❌ Error while saving";
+err.message;
+
+console.log(err);
 
 }
 
 }
 
-loadNames();
-toggleCamera();
+loadWorks();
+toggleImage();
 
 </script>
 
 </body>
 </html>
+```
