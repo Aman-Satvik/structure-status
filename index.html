@@ -1,3 +1,181 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Structure Status Entry</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #1e3a8a,
+        #2563eb,
+        #38bdf8
+    );
+}
+
+.card{
+    width:100%;
+    max-width:420px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:35px;
+    box-shadow:0 15px 35px rgba(0,0,0,.3);
+    color:white;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo h1{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.logo p{
+    opacity:.8;
+}
+
+label{
+    display:block;
+    margin-top:18px;
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+select,
+input[type="text"]{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+}
+
+input[type="file"]{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    color:black;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:#22c55e;
+    color:white;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+#msg{
+    margin-top:15px;
+    text-align:center;
+    font-weight:600;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    font-size:12px;
+    opacity:.8;
+    line-height:1.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="logo">
+<h1>🏗 Structure Status</h1>
+<p>Select Structure & Update Status</p>
+</div>
+
+<label>Select Work</label>
+
+<select id="name" onchange="showVillage()">
+<option value="">Loading...</option>
+</select>
+
+<label>Village Name</label>
+
+<input
+type="text"
+id="village"
+readonly>
+
+<label>Status</label>
+
+<select id="status" onchange="toggleCamera()">
+
+<option value="To be deleted">
+🗑 To be deleted
+</option>
+
+<option value="To be constructed">
+🚧 To be constructed
+</option>
+
+</select>
+
+<div id="cameraDiv" style="display:none;">
+
+<label>
+Upload Consent Form
+<span style="color:#ffeb3b;">*</span>
+</label>
+
+<input
+type="file"
+id="photo"
+accept="image/*"
+capture="environment">
+
+</div>
+
+<button onclick="saveData()">
+Submit Entry
+</button>
+
+<div id="msg"></div>
+
+<div class="footer">
+PMKSY 2.0 Monitoring Portal<br>
+By Er. Amandeep Godara (AEn, WDSC, Rawatsar)
+</div>
+
+</div>
+
 <script>
 
 const api =
@@ -12,16 +190,17 @@ async function loadNames(){
         const res =
         await fetch(api + "?action=details");
 
-        workData = await res.json();
+        workData =
+        await res.json();
 
         let html =
         '<option value="">Select Work</option>';
 
         workData.forEach(item=>{
 
-            html += `
-            <option value="${item.name}">
-                ${item.name}
+            html +=
+            `<option value="${item.name}">
+            ${item.name}
             </option>`;
         });
 
@@ -39,11 +218,11 @@ async function loadNames(){
 
 function showVillage(){
 
-    const selectedWork =
+    const selected =
     document.getElementById("name").value;
 
     const row =
-    workData.find(x => x.name === selectedWork);
+    workData.find(x => x.name === selected);
 
     document.getElementById("village").value =
     row ? row.village : "";
@@ -64,37 +243,46 @@ function resizeImage(file){
 
     return new Promise((resolve)=>{
 
-        const reader = new FileReader();
+        const reader =
+        new FileReader();
 
         reader.onload = function(e){
 
-            const img = new Image();
+            const img =
+            new Image();
 
             img.onload = function(){
 
                 const canvas =
                 document.createElement("canvas");
 
-                let width = img.width;
-                let height = img.height;
+                let width =
+                img.width;
 
-                const maxWidth = 1200;
+                let height =
+                img.height;
+
+                const maxWidth =
+                1200;
 
                 if(width > maxWidth){
 
                     height =
                     height * (maxWidth / width);
 
-                    width = maxWidth;
+                    width =
+                    maxWidth;
                 }
 
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width =
+                width;
 
-                const ctx =
-                canvas.getContext("2d");
+                canvas.height =
+                height;
 
-                ctx.drawImage(
+                canvas
+                .getContext("2d")
+                .drawImage(
                     img,
                     0,
                     0,
@@ -110,7 +298,8 @@ function resizeImage(file){
                 );
             };
 
-            img.src = e.target.result;
+            img.src =
+            e.target.result;
         };
 
         reader.readAsDataURL(file);
@@ -128,7 +317,6 @@ async function saveData(){
     if(!name){
 
         alert("Please Select Work");
-
         return;
     }
 
@@ -179,16 +367,13 @@ async function saveData(){
         const result =
         await response.json();
 
-        console.log(result);
-
         if(result.success){
 
             document.getElementById("msg").innerHTML =
             "✅ Entry Saved Successfully";
 
-            document.getElementById("photo").value="";
-
-            document.getElementById("village").value="";
+            document.getElementById("photo").value = "";
+            document.getElementById("village").value = "";
 
             loadNames();
 
@@ -211,3 +396,7 @@ loadNames();
 toggleCamera();
 
 </script>
+
+</body>
+</html>
+```
