@@ -8,7 +8,7 @@
 
 <style>
 
-*{ 
+*{
     margin:0;
     padding:0;
     box-sizing:border-box;
@@ -20,6 +20,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:20px;
 
     background: linear-gradient(
         135deg,
@@ -31,7 +32,8 @@ body{
 }
 
 .card{
-    width:420px;
+    width:100%;
+    max-width:420px;
     background:rgba(255,255,255,.15);
     backdrop-filter:blur(15px);
     border-radius:20px;
@@ -70,6 +72,15 @@ select{
     outline:none;
 }
 
+input[type="file"]{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    color:black;
+}
+
 button{
     width:100%;
     margin-top:25px;
@@ -100,6 +111,7 @@ button:hover{
     margin-top:20px;
     font-size:12px;
     opacity:.8;
+    line-height:1.5;
 }
 
 </style>
@@ -117,12 +129,13 @@ button:hover{
     <label>Select Name</label>
 
     <select id="name">
-        <option>Select Name</option>
+        <option value="">Loading...</option>
     </select>
 
     <label>Status</label>
 
-    <select id="status">
+    <select id="status" onchange="toggleCamera()">
+
         <option value="To be deleted">
             🗑 To be deleted
         </option>
@@ -130,7 +143,23 @@ button:hover{
         <option value="To be constructed">
             🚧 To be constructed
         </option>
+
     </select>
+
+    <div id="cameraDiv" style="display:none;">
+
+        <label>
+            Capture Image
+            <span style="color:#ffeb3b;">*</span>
+        </label>
+
+        <input
+            type="file"
+            id="photo"
+            accept="image/*"
+            capture="environment">
+
+    </div>
 
     <button onclick="saveData()">
         Submit Entry
@@ -139,56 +168,142 @@ button:hover{
     <div id="msg"></div>
 
     <div class="footer">
-        PMKSY 2.0 Monitoring Portal By Er. Amandeep Godara (AEn, WDSC, Rawatsar)
+        PMKSY 2.0 Monitoring Portal<br>
+        By Er. Amandeep Godara (AEn, WDSC, Rawatsar)
     </div>
 
 </div>
 
 <script>
 
-const api="https://script.google.com/macros/s/AKfycby78exG99GS9atmmB9X-Un0NX5eZ8DnIaR1uYUo2HU-1rlrA4AEiMgI7O7h1NnSnpxl/exec";
+const api =
+"https://script.google.com/macros/s/AKfycby78exG99GS9atmmB9X-Un0NX5eZ8DnIaR1uYUo2HU-1rlrA4AEiMgI7O7h1NnSnpxl/exec";
 
 async function loadNames(){
 
-    const res=await fetch(api);
-    const names=await res.json();
+    try{
 
-    let html='<option value="">Select Name</option>';
+        const res = await fetch(api);
 
-    names.forEach(name=>{
-        html+=`<option value="${name}">
+        const names = await res.json();
+
+        let html =
+        '<option value="">Select Name</option>';
+
+        names.forEach(name=>{
+
+            html += `
+            <option value="${name}">
                 ${name}
-              </option>`;
-    });
+            </option>`;
 
-    document.getElementById('name').innerHTML=html;
+        });
+
+        document.getElementById('name').innerHTML =
+        html;
+
+    }catch(err){
+
+        console.error(err);
+
+        document.getElementById('name').innerHTML =
+        '<option>Error Loading Names</option>';
+    }
+}
+
+function toggleCamera(){
+
+    const status =
+    document.getElementById("status").value;
+
+    document.getElementById("cameraDiv").style.display =
+    status === "To be deleted"
+    ? "block"
+    : "none";
+}
+
+function fileToBase64(file){
+
+    return new Promise((resolve,reject)=>{
+
+        const reader = new FileReader();
+
+        reader.onload = () =>
+        resolve(reader.result);
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+
+    });
 }
 
 async function saveData(){
 
-    let name=document.getElementById('name').value;
-    let status=document.getElementById('status').value;
+    const name =
+    document.getElementById('name').value;
+
+    const status =
+    document.getElementById('status').value;
 
     if(!name){
+
         alert("Please Select Name");
+
         return;
     }
 
-    await fetch(api,{
-        method:"POST",
-        body:JSON.stringify({
-            name:name,
-            status:status
-        })
-    });
+    let image = "";
 
-    document.getElementById("msg").innerHTML=
-    "✅ Entry Saved Successfully";
+    if(status === "To be deleted"){
 
-    loadNames();
+        const file =
+        document.getElementById("photo").files[0];
+
+        if(!file){
+
+            alert(
+            "Photo capture is mandatory for 'To be deleted'"
+            );
+
+            return;
+        }
+
+        image = await fileToBase64(file);
+    }
+
+    document.getElementById("msg").innerHTML =
+    "⏳ Uploading... Please wait";
+
+    try{
+
+        await fetch(api,{
+            method:"POST",
+            body:JSON.stringify({
+                name:name,
+                status:status,
+                image:image
+            })
+        });
+
+        document.getElementById("msg").innerHTML =
+        "✅ Entry Saved Successfully";
+
+        document.getElementById("photo").value = "";
+
+        loadNames();
+
+    }catch(err){
+
+        console.error(err);
+
+        document.getElementById("msg").innerHTML =
+        "❌ Error while saving";
+    }
 }
 
 loadNames();
+toggleCamera();
 
 </script>
 
