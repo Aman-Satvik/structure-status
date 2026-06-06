@@ -665,41 +665,41 @@ color:#dcfce7;">
 
 <div class="statBox">
 <span id="totalCount">0</span>
-<small>Total Works</small>
+<small>कुल कार्य</small>
 </div>
 
 <div class="statBox">
 <span id="completedCount">0</span>
-<small>Submitted</small>
+<small>दर्ज किये</small>
 </div>
 
 <div class="statBox">
 <span id="pendingCount">0</span>
-<small>Pending</small>
+<small>शेष</small>
 </div>
 
 </div>
 </div>
-<label>Select Work</label>
+<label>कार्य चुनें</label>
 
 <select id="work" onchange="showVillage()">
 <option>Loading...</option>
 </select>
 
-<label>Village Name</label>
+<label>गाँव</label>
 
 <input type="text" id="village" readonly>
 
-<label>Status</label>
+<label>स्थिति चुनें</label>
 
 <select id="status" onchange="toggleImage()">
-<option value="To be deleted">🗑 To be deleted</option>
-<option value="To be constructed">🚧 To be constructed</option>
+<option value="To be deleted">🗑 निरस्त होना है </option>
+<option value="To be constructed">🚧 निर्माण होना है</option>
 </select>
 
 <div id="imageDiv" style="display:none;">
 
-<label>Upload Consent Form *</label>
+<label>निरस्ती का सहमति पत्र *</label>
 
 <input
 type="file"
@@ -710,7 +710,7 @@ capture="environment">
 </div>
 
 <button onclick="saveData()">
-Submit Details
+दर्ज करें !
 </button>
 
 <div id="msg"></div>
